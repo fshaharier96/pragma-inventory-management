@@ -12,16 +12,22 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #f4f7fb;
             color: #1f2937;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1100px;
             margin: 30px auto;
             padding: 0 16px;
+            min-width: 0;
         }
 
         .card {
@@ -29,6 +35,8 @@
             border-radius: 14px;
             box-shadow: 0 8px 30px rgba(0,0,0,.08);
             padding: 24px;
+            max-width: 100%;
+            overflow-wrap: anywhere;
         }
 
         .page-header {
@@ -97,6 +105,8 @@
 
         .table-wrap {
             overflow-x: auto;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -125,6 +135,12 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .actions form {
+            display: inline-flex;
+            margin: 0;
         }
 
         .form-group {
@@ -175,6 +191,22 @@
 
         .pagination {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        img,
+        svg,
+        canvas,
+        video,
+        input,
+        select,
+        textarea,
+        button {
+            max-width: 100%;
         }
 
         @media (max-width: 768px) {
@@ -205,6 +237,10 @@
         }
 
         @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+
             th, td {
                 padding: 10px 8px;
                 font-size: 13px;

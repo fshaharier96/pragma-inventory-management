@@ -142,6 +142,35 @@
         .forgot-link:hover::after {
             width: 100%;
         }
+
+        @media (max-width: 480px), (max-height: 620px) {
+            body {
+                align-items: flex-start;
+                padding: 14px;
+            }
+
+            .auth-card {
+                padding: 22px 18px;
+                border-radius: 16px;
+            }
+
+            .auth-title {
+                font-size: 24px;
+                overflow-wrap: anywhere;
+            }
+
+            .auth-subtitle,
+            .auth-footer,
+            .forgot-link,
+            .checkbox-row {
+                line-height: 1.5;
+            }
+
+            .form-control,
+            .btn {
+                min-height: 44px;
+            }
+        }
     </style>
 </head>
 <body>

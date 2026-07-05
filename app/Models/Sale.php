@@ -14,7 +14,7 @@ class Sale extends Model
         'sale_date' => 'date',
     ];
 
-    public function items()
+    public function saleItems()
     {
         return $this->hasMany(SaleItem::class);
     }

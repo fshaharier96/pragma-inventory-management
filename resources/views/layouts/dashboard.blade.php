@@ -27,15 +27,21 @@
             --radius: 18px;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: var(--page-bg);
             color: var(--text-main);
+            overflow-x: hidden;
         }
 
         .admin-wrapper {
             display: flex;
             min-height: 100vh;
+            min-width: 0;
         }
 
         .sidebar {
@@ -124,6 +130,7 @@
             margin-left: 270px;
             width: calc(100% - 270px);
             min-height: 100vh;
+            min-width: 0;
         }
 
         .topbar {
@@ -143,11 +150,13 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            min-width: 0;
         }
 
         .page-title {
             font-size: 26px;
             font-weight: 700;
+            overflow-wrap: anywhere;
         }
 
         .menu-toggle {
@@ -162,6 +171,8 @@
 
         .content {
             padding: 24px;
+            max-width: 100%;
+            min-width: 0;
         }
 
         .card {
@@ -186,6 +197,7 @@
         .grid {
             display: grid;
             gap: 20px;
+            min-width: 0;
         }
 
         .grid-4 {
@@ -202,6 +214,7 @@
             border-radius: var(--radius);
             padding: 22px;
             box-shadow: var(--shadow);
+            min-width: 0;
         }
 
         .stat-label {
@@ -225,6 +238,7 @@
             padding: 22px;
             box-shadow: var(--shadow);
             transition: .25s ease;
+            min-width: 0;
         }
 
         .quick-link:hover {
@@ -248,6 +262,8 @@
 
         .table-wrap {
             overflow-x: auto;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -303,12 +319,32 @@
         }
 
         @media (max-width: 900px) {
+            body.sidebar-open {
+                overflow: hidden;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
+                width: min(270px, 86vw);
             }
 
             .sidebar.show {
                 transform: translateX(0);
+            }
+
+            .sidebar-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.45);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .25s ease;
+                z-index: 900;
+            }
+
+            body.sidebar-open .sidebar-backdrop {
+                opacity: 1;
+                pointer-events: auto;
             }
 
             .main {
@@ -323,15 +359,16 @@
 
         @media (max-width: 640px) {
             .content {
-                padding: 16px;
+                padding: 14px;
             }
 
             .topbar {
-                padding: 16px;
+                align-items: flex-start;
+                padding: 14px;
             }
 
             .page-title {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .card,
@@ -343,6 +380,12 @@
             .grid-4,
             .grid-3 {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .sidebar-backdrop {
+                display: none;
             }
         }
     </style>
@@ -448,10 +491,167 @@
         </main>
     </div>
 
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+    <style>
+        .content *,
+        .topbar *,
+        .sidebar * {
+            min-width: 0;
+        }
+
+        .module-card,
+        .card,
+        .stat-card,
+        .quick-link {
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .module-header,
+        .form-actions,
+        .actions {
+            min-width: 0;
+        }
+
+        .table-wrap {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            max-width: none;
+        }
+
+        th,
+        td {
+            vertical-align: top;
+        }
+
+        .form-grid,
+        .item-grid {
+            grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)) !important;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-control,
+        input,
+        select,
+        textarea,
+        button {
+            max-width: 100%;
+        }
+
+        .btn,
+        button {
+            white-space: normal;
+        }
+
+        .actions {
+            align-items: center;
+        }
+
+        .actions form {
+            display: inline-flex;
+            margin: 0;
+        }
+
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        img,
+        svg,
+        canvas,
+        video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .module-card,
+            .card,
+            .stat-card,
+            .quick-link {
+                border-radius: 14px !important;
+                padding: 16px !important;
+            }
+
+            .module-header {
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+
+            .module-header > * {
+                width: 100%;
+            }
+
+            .form-actions > .btn,
+            .form-actions > button,
+            .form-actions > a,
+            .module-header > .btn,
+            .module-header > a.btn {
+                width: 100% !important;
+                text-align: center;
+            }
+
+            .actions .btn,
+            .actions button {
+                width: auto !important;
+                min-height: 36px;
+            }
+
+            th,
+            td {
+                padding: 11px 10px !important;
+                font-size: 13px !important;
+            }
+
+            .item-box {
+                padding: 12px !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .content {
+                padding: 10px;
+            }
+
+            .topbar-left {
+                width: 100%;
+            }
+
+            .menu-toggle {
+                flex: 0 0 auto;
+                padding: 9px 11px;
+            }
+        }
+    </style>
+
     <script>
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('show');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+            document.body.classList.toggle('sidebar-open', sidebar.classList.contains('show'));
         }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('show');
+            document.body.classList.remove('sidebar-open');
+        }
+
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
     </script>
 </body>
 </html>
