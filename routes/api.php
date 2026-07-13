@@ -45,6 +45,8 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 */
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+
     Route::prefix('dashboard')->group(function(){
         Route::get('/', [DashboardController::class, 'index'])->name('api.dashboard.index');
     });
