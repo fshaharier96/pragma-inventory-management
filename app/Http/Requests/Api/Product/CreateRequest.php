@@ -30,7 +30,7 @@ class CreateRequest extends FormRequest
             'selling_price' => 'required|numeric',
             'status' => 'required|string',
             'category_id' => 'required|integer|exists:categories,id',
-            'reorder_level'=> 'nullable|integer',
+            'min_stock_quantity'=> 'nullable|integer',
         ];
     }
 }

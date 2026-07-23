@@ -37,7 +37,7 @@ class ProductService
                "selling_price" => $validated['selling_price'],
                "status" => $validated['status'],
                "is_default" => true,
-               "reorder_level" => $validated['reorder_level'],
+               "min_stock_quantity" => $validated['min_stock_quantity'],
            ];
             $product_variant = $product->productVariants()->create($product_variant_arr);
             $product->has_variants = true;
