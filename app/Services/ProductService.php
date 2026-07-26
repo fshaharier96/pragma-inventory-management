@@ -57,7 +57,7 @@ class ProductService
    }
 
    public function getProductById(int $id){
-       $product = Product::find($id);
+       $product = Product::with('productVariants')->find($id);
        return $product;
    }
 
