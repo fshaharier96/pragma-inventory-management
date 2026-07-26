@@ -74,6 +74,9 @@
 </form>
 
 <div class="auth-footer">
-    Back to <a href="{{ route('login') }}">Login</a>
+    Back to  
+    <a href="{{ app()->environment('local') ? 'http://localhost:5173/' : 'https://pragma-inventroyv2.avencoding.site/' }}">
+        Login
+    </a>
 </div>
 @endsection

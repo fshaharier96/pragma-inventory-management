@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -76,33 +79,31 @@ class AuthController extends Controller
             'email' => 'required|email|exists:users,email',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        $verification_code = rand(100000, 999999);
-        $user->verification_code = $verification_code;
-        $user->save();
+        $token = hash('sha256', Str::random(30));
 
-        // Here you would typically send the verification code via email or SMS.
-        // For this example, we'll just return it in the response.
+        $resetUrl = url('/reset-password?token='.$token.'&email='.$request->email);
 
-        return response()->json([
-            'message' => 'Verification code sent successfully',
-            'verification_code' => $verification_code,
-        ], 200);
-    }
+        $expiringTime = now()->addMinutes(config('auth.passwords.users.expire'));
 
-    public function resetPassword(Request $request){
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'new_password' => 'required|string|min:8|confirmed',
-            'verification_code' => 'required|integer',
-        ]);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'token' => $token,
+                'created_at' => now(),
+                'expires_at' => $expiringTime,
+            ]
+        );
 
-        $user = User::where('email', $request->email)->first();
-        $user->password = Hash::make($request->new_password);
-        $user->save();
+        $sentPasswordResetEmail = Mail::to($request->email)->send(new \App\Mail\PasswordResetEmail($resetUrl, $expiringTime->toDateTimeString()));
 
-        return response()->json([
-            'message' => 'Password reset successful',
-        ], 200);
+        if($sentPasswordResetEmail) {
+            return response()->json([
+                'message' => 'Verification code sent successfully, please check your email inbox.',
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'Failed to send password reset email. Please try again later.',
+            ], 500);
+        }
     }
 }

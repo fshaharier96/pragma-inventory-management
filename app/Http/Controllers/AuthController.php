@@ -140,6 +140,12 @@ class AuthController extends Controller
 
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-        return redirect()->route('login')->with('status', 'Your password has been reset successfully. You can now log in with your new password.');
+        //return redirect()->route('login')->with('status', 'Your password has been reset successfully. You can now log in with your new password.');
+        if(config('app.env') === 'local') {
+            return redirect()->away("http://localhost:5173/");
+        }else{
+            return redirect()->away("https://pragma-inventroyv2.avencoding.site/");
+        }   
+        
     }
 }
