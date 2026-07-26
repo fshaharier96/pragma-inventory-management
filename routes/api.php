@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 Route::post('/register', [AuthController::class, 'register'])->name('api.register');
+Route::post('/send-password-reset-link', [AuthController::class, 'sendPasswordResetLink'])->name('api.send-password-reset-link');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('api.reset-password');
 
 
