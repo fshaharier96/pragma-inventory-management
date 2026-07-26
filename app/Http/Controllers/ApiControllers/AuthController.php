@@ -70,4 +70,39 @@ class AuthController extends Controller
             'message' => 'Logout successful',
         ], 200);
     }
+
+    public function sendPasswordResetLink(Request $request){
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $verification_code = rand(100000, 999999);
+        $user->verification_code = $verification_code;
+        $user->save();
+
+        // Here you would typically send the verification code via email or SMS.
+        // For this example, we'll just return it in the response.
+
+        return response()->json([
+            'message' => 'Verification code sent successfully',
+            'verification_code' => $verification_code,
+        ], 200);
+    }
+
+    public function resetPassword(Request $request){
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'new_password' => 'required|string|min:8|confirmed',
+            'verification_code' => 'required|integer',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Password reset successful',
+        ], 200);
+    }
 }
